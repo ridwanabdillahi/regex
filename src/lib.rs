@@ -608,6 +608,8 @@ another matching engine with fixed memory requirements.
 #![deny(missing_docs)]
 #![cfg_attr(feature = "pattern", feature(pattern))]
 #![warn(missing_debug_implementations)]
+#![feature(debugger_visualizer)]
+#![debugger_visualizer(natvis_file = "../regex.natvis")]
 
 #[cfg(not(feature = "std"))]
 compile_error!("`std` feature is currently required to build this crate");
