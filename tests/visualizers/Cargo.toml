@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "natvis",
+]
+exclude = ["target"]
+
+[profile.release]
+debug = 2

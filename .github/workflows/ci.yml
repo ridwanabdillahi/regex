@@ -27,6 +27,7 @@ jobs:
         - nightly
         - macos
         - win-msvc
+        - win-msvc (nightly)
         - win-gnu
         include:
         - build: pinned
@@ -55,6 +56,9 @@ jobs:
         - build: win-msvc
           os: windows-2019
           rust: stable
+        - build: win-msvc (nightly)
+          os: windows-2019
+          rust: nightly
         - build: win-gnu
           os: windows-2019
           rust: stable-x86_64-gnu
@@ -155,6 +159,15 @@ jobs:
       name: Run tests with pattern feature
       run: |
         cargo test --test default --no-default-features --features 'std pattern unicode-perl'
+
+    # The #[debugger_visualizer] attribute is currently gated behind an unstable feature flag.
+    # In order to test the visualizers for the regex crate, they have to be tested on a nightly build.
+    - if: matrix.build == 'win-msvc (nightly)'
+      name: Run visualizer tests with debugger_visualizer feature
+      run: |
+        # install the Debuginfo Test Runner to test visualizers defined for the regex crate
+        cargo install dbt --git https://github.com/rust-lang/rust-dbg-ext.git --rev 2a17aa351ab66160464aace0e35370e3d671740a --bin dbt
+        dbt -d cdb --cargo-workspace tests/visualizers --cargo-profile debug -o target
 
   rustfmt:
     name: rustfmt
